@@ -189,21 +189,35 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div>
-        {bins.length > 0
-          ? bins.map((bin, binIndex) => (
-              <div key={binIndex} className="flex space-x-2 mb-2">
-                {bin.map((item, itemIndex) => (
-                  <div
-                    key={itemIndex}
-                    className="w-14 h-10 bg-gray-600 text-white flex items-center justify-center"
-                  >
-                    {item}
-                  </div>
-                ))}
+      <div className="h-[100vh] w-full flex items-center justify-center ">
+        {bins.length > 0 ? (
+          <div>
+            <div className="flex space-x-4">
+              {bins.map((bin, binIndex) => (
+                <div
+                  key={binIndex}
+                  className="flex flex-col border-yellow-600 border-2 hover:scale-110 transition-all duration-300"
+                >
+                  {bin.map((item, itemIndex) => (
+                    <div
+                      key={itemIndex}
+                      className="w-14 h-10 bg-gray-600 text-white flex items-center justify-center"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div>
+              <div className="items-center justify-center flex">
+                <p className="text-2xl m-5">{functionCalled}</p>
               </div>
-            ))
-          : ""}
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
