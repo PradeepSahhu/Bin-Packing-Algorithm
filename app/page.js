@@ -201,7 +201,7 @@ export default function Home() {
                   {bin.map((item, itemIndex) => (
                     <div
                       key={itemIndex}
-                      className="w-14 h-10 bg-gray-600 text-white flex items-center justify-center"
+                      className="w-14 h-10 bg-gray-600 text-white flex items-center justify-center border-2 border-black"
                     >
                       {item}
                     </div>
