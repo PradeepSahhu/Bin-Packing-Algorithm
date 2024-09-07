@@ -1,101 +1,210 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [items, setItems] = useState([]);
+  const [capacity, setCapacity] = useState();
+  const [bins, setBins] = useState([]);
+  const [functionCalled, setFunctionCalled] = useState();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const handleInputChange = (e) => {
+    const itemSizes = e.target.value.split(",").map(Number);
+    setItems(itemSizes);
+  };
+
+  const handleCapacityChange = (e) => setCapacity(Number(e.target.value));
+
+  const worstFit = () => {
+    setFunctionCalled("Worst-Fit");
+    const binList = [];
+
+    items.forEach((item) => {
+      let worstBinIndex = -1;
+      let maxSpace = -1;
+
+      // Find the bin with the most remaining space that can still fit the item
+      for (let i = 0; i < binList.length; i++) {
+        if (
+          binList[i].remainingSpace >= item &&
+          binList[i].remainingSpace > maxSpace
+        ) {
+          worstBinIndex = i;
+          maxSpace = binList[i].remainingSpace;
+        }
+      }
+
+      // If no bin is found, create a new bin
+      if (worstBinIndex === -1) {
+        binList.push({
+          items: [item],
+          remainingSpace: capacity - item,
+        });
+      } else {
+        // Add the item to the worst bin and update its remaining space
+        binList[worstBinIndex].items.push(item);
+        binList[worstBinIndex].remainingSpace -= item;
+      }
+    });
+
+    setBins(binList.map((bin) => bin.items));
+  };
+
+  const nextFit = () => {
+    setFunctionCalled("Next-Fit");
+    console.table([capacity, items]);
+    let binCount = 0;
+    let remainingSpace = capacity;
+    const binList = [[]];
+    items.forEach((item) => {
+      if (item > remainingSpace) {
+        binCount++;
+        remainingSpace = capacity - item;
+        binList.push([item]);
+      } else {
+        remainingSpace -= item;
+        binList[binCount].push(item);
+        // binList[binCount] = item;
+      }
+    });
+    setBins(binList);
+  };
+
+  // Implementations for other algorithms will go here (e.g., firstFit, bestFit)
+  const firstFit = () => {
+    setFunctionCalled("First-Fit");
+    const binList = [];
+    items.forEach((item) => {
+      let placed = false;
+      for (let i = 0; i < binList.length; i++) {
+        if (binList[i].remainingSpace >= item) {
+          binList[i].items.push(item);
+          binList[i].remainingSpace -= item;
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        binList.push({
+          items: [item],
+          remainingSpace: capacity - item,
+        });
+      }
+    });
+    setBins(binList.map((bin) => bin.items));
+  };
+  const bestFit = () => {
+    setFunctionCalled("Best-Fit");
+    const binList = [];
+    items.forEach((item) => {
+      let bestBinIndex = -1;
+      let minSpace = capacity + 1;
+      for (let i = 0; i < binList.length; i++) {
+        if (
+          binList[i].remainingSpace >= item &&
+          binList[i].remainingSpace < minSpace
+        ) {
+          bestBinIndex = i;
+          minSpace = binList[i].remainingSpace;
+        }
+      }
+      if (bestBinIndex === -1) {
+        binList.push({
+          items: [item],
+          remainingSpace: capacity - item,
+        });
+      } else {
+        binList[bestBinIndex].items.push(item);
+        binList[bestBinIndex].remainingSpace -= item;
+      }
+    });
+    setBins(binList.map((bin) => bin.items));
+  };
+
+  return (
+    <div>
+      <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center text-black">
+        <h1 className="text-3xl font-bold mb-5">Bin Packing Algorithms</h1>
+        <div className="w-96 p-5 bg-white rounded-lg shadow-lg">
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">
+              Items (comma-separated)
+            </label>
+            <input
+              type="text"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              placeholder="e.g. 2, 5, 4, 7, 1, 3"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Bin Capacity</label>
+            <input
+              type="number"
+              onChange={handleCapacityChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              placeholder="e.g. 10"
+            />
+          </div>
+          <button
+            onClick={nextFit}
+            className="w-full bg-blue-500 text-white py-2 rounded-lg mb-4"
           >
-            Read our docs
-          </a>
+            Next-Fit Algorithm
+          </button>
+          {/* Add buttons for other algorithms */}
+          <div className="flex space-x-4 mb-4">
+            <button
+              onClick={firstFit}
+              className="bg-green-500 text-white py-2 px-4 rounded-lg"
+            >
+              First-Fit
+            </button>
+            <button
+              name="Best-Fit"
+              onClick={() => bestFit()}
+              className="bg-purple-500 text-white py-2 px-4 rounded-lg"
+            >
+              Best-Fit
+            </button>
+            <button
+              onClick={worstFit}
+              className="bg-yellow-500 text-white py-2 px-4 rounded-lg"
+            >
+              Worst-Fit
+            </button>
+          </div>
+          <div className="mt-5">
+            <h2 className="text-xl font-bold">
+              Bins: <span className="text-yellow-400">{functionCalled}</span>
+            </h2>
+            {bins.length > 0 ? (
+              bins.map((bin, index) => (
+                <div key={index} className="mt-2 bg-gray-200 p-2 rounded-md">
+                  Bin {index + 1}: {bin.join(", ")}
+                </div>
+              ))
+            ) : (
+              <p>No bins packed yet.</p>
+            )}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+      <div>
+        {bins.length > 0
+          ? bins.map((bin, binIndex) => (
+              <div key={binIndex} className="flex space-x-2 mb-2">
+                {bin.map((item, itemIndex) => (
+                  <div
+                    key={itemIndex}
+                    className="w-14 h-10 bg-gray-600 text-white flex items-center justify-center"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            ))
+          : ""}
+      </div>
     </div>
   );
 }
