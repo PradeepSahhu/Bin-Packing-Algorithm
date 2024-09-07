@@ -196,7 +196,7 @@ export default function Home() {
               {bins.map((bin, binIndex) => (
                 <div
                   key={binIndex}
-                  className="flex flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300"
+                  className="flex flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 justify-end"
                 >
                   {bin.map((item, itemIndex) => (
                     <div
