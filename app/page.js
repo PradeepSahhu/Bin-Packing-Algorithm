@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { FaCheckToSlot } from "react-icons/fa6";
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -15,7 +16,7 @@ export default function Home() {
   const handleCapacityChange = (e) => setCapacity(Number(e.target.value));
 
   const worstFit = () => {
-    setFunctionCalled("Worst-Fit");
+    setFunctionCalled("Worst-Fit Algorithm");
     const binList = [];
 
     items.forEach((item) => {
@@ -50,7 +51,7 @@ export default function Home() {
   };
 
   const nextFit = () => {
-    setFunctionCalled("Next-Fit");
+    setFunctionCalled("Next-Fit Algorithm");
     console.table([capacity, items]);
     let binCount = 0;
     let remainingSpace = capacity;
@@ -71,7 +72,7 @@ export default function Home() {
 
   // Implementations for other algorithms will go here (e.g., firstFit, bestFit)
   const firstFit = () => {
-    setFunctionCalled("First-Fit");
+    setFunctionCalled("First-Fit Algorithm");
     const binList = [];
     items.forEach((item) => {
       let placed = false;
@@ -93,7 +94,7 @@ export default function Home() {
     setBins(binList.map((bin) => bin.items));
   };
   const bestFit = () => {
-    setFunctionCalled("Best-Fit");
+    setFunctionCalled("Best-Fit Algorithm");
     const binList = [];
     items.forEach((item) => {
       let bestBinIndex = -1;
@@ -147,30 +148,31 @@ export default function Home() {
           </div>
           <button
             onClick={nextFit}
-            className="w-full bg-blue-500 text-white py-2 rounded-lg mb-4"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg mb-4 flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
           >
-            Next-Fit Algorithm
+            Next-Fit Algorithm <FaCheckToSlot className="text-2xl ml-2" />
           </button>
           {/* Add buttons for other algorithms */}
-          <div className="flex space-x-4 mb-4">
+          <div className="space-y-4 mb-4 absolute top-[15rem] left-[15rem]">
             <button
               onClick={firstFit}
-              className="bg-green-500 text-white py-2 px-4 rounded-lg"
+              className="bg-green-500 text-white py-2 px-4 rounded-lg flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
             >
-              First-Fit
+              First-Fit Algorithm <FaCheckToSlot className="text-2xl ml-2" />
             </button>
             <button
               name="Best-Fit"
               onClick={() => bestFit()}
-              className="bg-purple-500 text-white py-2 px-4 rounded-lg"
+              className="bg-purple-500 text-white py-2 px-4 rounded-lg flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
             >
-              Best-Fit
+              Best-Fit Algorithm <FaCheckToSlot className="text-2xl ml-2" />
             </button>
             <button
               onClick={worstFit}
-              className="bg-yellow-500 text-white py-2 px-4 rounded-lg"
+              className="bg-yellow-500 text-white py-2 px-4 rounded-lg flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
             >
-              Worst-Fit
+              Worst-Fit Algorithm
+              <FaCheckToSlot className="text-2xl ml-2" />
             </button>
           </div>
           <div className="mt-5">
@@ -196,12 +198,14 @@ export default function Home() {
               {bins.map((bin, binIndex) => (
                 <div
                   key={binIndex}
-                  className="flex flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 justify-end"
+                  className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 justify-end`}
+                  style={{ height: `${capacity * 20}px` }} // Set a fixed height for the bin
                 >
                   {bin.map((item, itemIndex) => (
                     <div
                       key={itemIndex}
-                      className="w-14 h-10 bg-gray-600 text-white flex items-center justify-center border-2 border-black"
+                      className={`w-14  bg-gray-600 text-white flex items-center justify-center border-2 border-black`}
+                      style={{ height: `${item * 20}px` }} // Divide bin height equally among items
                     >
                       {item}
                     </div>
@@ -218,6 +222,146 @@ export default function Home() {
         ) : (
           ""
         )}
+      </div>
+      {/* Division */}
+      <div className="grid grid-cols-2 grid-rows-2 h-[100vh] my-10">
+        <div className="col-start-1 col-end-1 row-start-1 row-end-1 flex justify-center items-center border-yellow-400 border-2 ">
+          <div>
+            {bins.length > 0 ? (
+              <div>
+                <div className="flex space-x-4 flex-end">
+                  {bins.map((bin, binIndex) => (
+                    <div
+                      key={binIndex}
+                      className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
+                      style={{ height: `${capacity * 20}px` }}
+                    >
+                      {bin.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className={`w-14  bg-gray-600 text-white flex items-center justify-center border-2 border-black `}
+                          style={{ height: `${item * 20}px` }} // Divide bin height equally among items
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            <div className="flex justify-center">
+              <p className="text-2xl text-yellow-400 my-5">
+                Worst-Fit Function
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="col-start-1 col-end-1 row-start-2 row-end-2 flex justify-center items-center border-yellow-400 border-2 ">
+          <div>
+            {bins.length > 0 ? (
+              <div>
+                <div className="flex space-x-4 flex-end">
+                  {bins.map((bin, binIndex) => (
+                    <div
+                      key={binIndex}
+                      className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
+                      style={{ height: `${capacity * 20}px` }}
+                    >
+                      {bin.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className={`w-14  bg-gray-600 text-white flex items-center justify-center border-2 border-black `}
+                          style={{ height: `${item * 20}px` }} // Divide bin height equally among items
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            <div className="flex justify-center">
+              <p className="text-2xl text-yellow-400 my-5">
+                Worst-Fit Function
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="col-start-2 col-end-2 row-start-1 row-end-1 flex justify-center items-center border-yellow-400 border-2 ">
+          <div>
+            {bins.length > 0 ? (
+              <div>
+                <div className="flex space-x-4 flex-end">
+                  {bins.map((bin, binIndex) => (
+                    <div
+                      key={binIndex}
+                      className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
+                      style={{ height: `${capacity * 20}px` }}
+                    >
+                      {bin.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className={`w-14  bg-gray-600 text-white flex items-center justify-center border-2 border-black `}
+                          style={{ height: `${item * 20}px` }} // Divide bin height equally among items
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            <div className="flex justify-center">
+              <p className="text-2xl text-yellow-400 my-5">
+                Worst-Fit Function
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="col-start-2 col-end-2 row-start-2 row-end-2 flex justify-center items-center border-yellow-400 border-2 ">
+          <div>
+            {bins.length > 0 ? (
+              <div>
+                <div className="flex space-x-4 flex-end">
+                  {bins.map((bin, binIndex) => (
+                    <div
+                      key={binIndex}
+                      className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
+                      style={{ height: `${capacity * 20}px` }}
+                    >
+                      {bin.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className={`w-14  bg-gray-600 text-white flex items-center justify-center border-2 border-black `}
+                          style={{ height: `${item * 20}px` }} // Divide bin height equally among items
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            <div className="flex justify-center">
+              <p className="text-2xl text-yellow-400 my-5">
+                Worst-Fit Function
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
