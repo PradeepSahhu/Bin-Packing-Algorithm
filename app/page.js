@@ -6,7 +6,14 @@ export default function Home() {
   const [items, setItems] = useState([]);
   const [capacity, setCapacity] = useState();
   const [bins, setBins] = useState([]);
+
   const [functionCalled, setFunctionCalled] = useState();
+
+  //bins for different functions.
+  const [firstBins, setFirstBins] = useState([]);
+  const [nextBins, setNextBins] = useState([]);
+  const [worstBins, setWorstBins] = useState([]);
+  const [bestBins, setBestBins] = useState([]);
 
   const handleInputChange = (e) => {
     const itemSizes = e.target.value.split(",").map(Number);
@@ -48,6 +55,7 @@ export default function Home() {
     });
 
     setBins(binList.map((bin) => bin.items));
+    setWorstBins(binList.map((bin) => bin.items));
   };
 
   const nextFit = () => {
@@ -68,6 +76,10 @@ export default function Home() {
       }
     });
     setBins(binList);
+    // setFirstBins(binList);
+    setNextBins(binList);
+    setWorstBins(binList);
+    // setBestBins(binList);
   };
 
   // Implementations for other algorithms will go here (e.g., firstFit, bestFit)
@@ -92,6 +104,7 @@ export default function Home() {
       }
     });
     setBins(binList.map((bin) => bin.items));
+    setFirstBins(binList.map((bin) => bin.items));
   };
   const bestFit = () => {
     setFunctionCalled("Best-Fit Algorithm");
@@ -119,6 +132,7 @@ export default function Home() {
       }
     });
     setBins(binList.map((bin) => bin.items));
+    setBestBins(binList.map((bin) => bin.items));
   };
 
   return (
@@ -288,9 +302,7 @@ export default function Home() {
               ""
             )}
             <div className="flex justify-center">
-              <p className="text-2xl text-yellow-400 my-5">
-                Worst-Fit Function
-              </p>
+              <p className="text-2xl text-yellow-400 my-5">Best-Fit Function</p>
             </div>
           </div>
         </div>
@@ -322,9 +334,7 @@ export default function Home() {
               ""
             )}
             <div className="flex justify-center">
-              <p className="text-2xl text-yellow-400 my-5">
-                Worst-Fit Function
-              </p>
+              <p className="text-2xl text-yellow-400 my-5">Next-Fit Function</p>
             </div>
           </div>
         </div>
@@ -357,7 +367,7 @@ export default function Home() {
             )}
             <div className="flex justify-center">
               <p className="text-2xl text-yellow-400 my-5">
-                Worst-Fit Function
+                First-Fit Function
               </p>
             </div>
           </div>
