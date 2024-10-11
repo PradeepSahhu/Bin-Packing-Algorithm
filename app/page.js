@@ -1,6 +1,12 @@
 "use client";
 import { useState } from "react";
 import { FaCheckToSlot } from "react-icons/fa6";
+import {
+  firstFitAlgorithm,
+  nextFitAlgorithm,
+  worstFitAlgorithm,
+  bestFitAlgorithm,
+} from "./utility/binAlgos";
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -30,7 +36,6 @@ export default function Home() {
       let worstBinIndex = -1;
       let maxSpace = -1;
 
-      // Find the bin with the most remaining space that can still fit the item
       for (let i = 0; i < binList.length; i++) {
         if (
           binList[i].remainingSpace >= item &&
@@ -41,14 +46,12 @@ export default function Home() {
         }
       }
 
-      // If no bin is found, create a new bin
       if (worstBinIndex === -1) {
         binList.push({
           items: [item],
           remainingSpace: capacity - item,
         });
       } else {
-        // Add the item to the worst bin and update its remaining space
         binList[worstBinIndex].items.push(item);
         binList[worstBinIndex].remainingSpace -= item;
       }
@@ -56,6 +59,7 @@ export default function Home() {
 
     setBins(binList.map((bin) => bin.items));
     setWorstBins(binList.map((bin) => bin.items));
+    callAllBins();
   };
 
   const nextFit = () => {
@@ -80,9 +84,9 @@ export default function Home() {
     setNextBins(binList);
     setWorstBins(binList);
     // setBestBins(binList);
+    callAllBins();
   };
 
-  // Implementations for other algorithms will go here (e.g., firstFit, bestFit)
   const firstFit = () => {
     setFunctionCalled("First-Fit Algorithm");
     const binList = [];
@@ -105,6 +109,7 @@ export default function Home() {
     });
     setBins(binList.map((bin) => bin.items));
     setFirstBins(binList.map((bin) => bin.items));
+    callAllBins();
   };
   const bestFit = () => {
     setFunctionCalled("Best-Fit Algorithm");
@@ -133,6 +138,16 @@ export default function Home() {
     });
     setBins(binList.map((bin) => bin.items));
     setBestBins(binList.map((bin) => bin.items));
+    callAllBins();
+  };
+
+  //Calling all bins.
+
+  const callAllBins = () => {
+    firstFitAlgorithm(setFunctionCalled, setFirstBins, items, capacity);
+    worstFitAlgorithm(setFunctionCalled, setWorstBins, items, capacity);
+    bestFitAlgorithm(setFunctionCalled, setBestBins, items, capacity);
+    nextFitAlgorithm(setFunctionCalled, setNextBins, items, capacity);
   };
 
   return (
@@ -162,6 +177,7 @@ export default function Home() {
           </div>
           <button
             onClick={nextFit}
+            name="next"
             className="w-full bg-blue-500 text-white py-2 rounded-lg mb-4 flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
           >
             Next-Fit Algorithm <FaCheckToSlot className="text-2xl ml-2" />
@@ -169,19 +185,21 @@ export default function Home() {
           {/* Add buttons for other algorithms */}
           <div className="space-y-4 mb-4 absolute top-[15rem] left-[15rem]">
             <button
+              name="first"
               onClick={firstFit}
               className="bg-green-500 text-white py-2 px-4 rounded-lg flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
             >
               First-Fit Algorithm <FaCheckToSlot className="text-2xl ml-2" />
             </button>
             <button
-              name="Best-Fit"
+              name="best"
               onClick={() => bestFit()}
               className="bg-purple-500 text-white py-2 px-4 rounded-lg flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
             >
               Best-Fit Algorithm <FaCheckToSlot className="text-2xl ml-2" />
             </button>
             <button
+              name="worst"
               onClick={worstFit}
               className="bg-yellow-500 text-white py-2 px-4 rounded-lg flex justify-center hover:scale-95 hover:text-black transition-all duration-300"
             >
@@ -244,7 +262,7 @@ export default function Home() {
             {bins.length > 0 ? (
               <div>
                 <div className="flex space-x-4 flex-end">
-                  {bins.map((bin, binIndex) => (
+                  {worstBins.map((bin, binIndex) => (
                     <div
                       key={binIndex}
                       className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
@@ -279,7 +297,7 @@ export default function Home() {
             {bins.length > 0 ? (
               <div>
                 <div className="flex space-x-4 flex-end">
-                  {bins.map((bin, binIndex) => (
+                  {bestBins.map((bin, binIndex) => (
                     <div
                       key={binIndex}
                       className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
@@ -308,7 +326,7 @@ export default function Home() {
         </div>
         <div className="col-start-2 col-end-2 row-start-1 row-end-1 flex justify-center items-center border-yellow-400 border-2 ">
           <div>
-            {bins.length > 0 ? (
+            {nextBins.length > 0 ? (
               <div>
                 <div className="flex space-x-4 flex-end">
                   {bins.map((bin, binIndex) => (
@@ -343,7 +361,7 @@ export default function Home() {
             {bins.length > 0 ? (
               <div>
                 <div className="flex space-x-4 flex-end">
-                  {bins.map((bin, binIndex) => (
+                  {firstBins.map((bin, binIndex) => (
                     <div
                       key={binIndex}
                       className={`flex  flex-col border-yellow-600 border-2 hover:scale-125 transition-all duration-300 flex-end`}
