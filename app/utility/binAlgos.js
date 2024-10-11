@@ -1,10 +1,4 @@
-const worstFitAlgorithm = (
-  setFunctionCalled,
-  setWorstBins,
-  items,
-  capacity
-) => {
-  setFunctionCalled("Worst-Fit Algorithm");
+const worstFitAlgorithm = (setWorstBins, items, capacity) => {
   const binList = [];
 
   items.forEach((item) => {
@@ -35,8 +29,7 @@ const worstFitAlgorithm = (
   setWorstBins(binList.map((bin) => bin.items));
 };
 
-const nextFitAlgorithm = (setFunctionCalled, setNextBins, items, capacity) => {
-  setFunctionCalled("Next-Fit Algorithm");
+const nextFitAlgorithm = (setNextBins, items, capacity) => {
   console.table([capacity, items]);
   let binCount = 0;
   let remainingSpace = capacity;
@@ -59,13 +52,7 @@ const nextFitAlgorithm = (setFunctionCalled, setNextBins, items, capacity) => {
   //   setBestBins(binList);
 };
 
-const firstFitAlgorithm = (
-  setFunctionCalled,
-  setFirstBins,
-  items,
-  capacity
-) => {
-  setFunctionCalled("First-Fit Algorithm");
+const firstFitAlgorithm = (setFirstBins, items, capacity) => {
   const binList = [];
   items.forEach((item) => {
     let placed = false;
@@ -87,8 +74,7 @@ const firstFitAlgorithm = (
   //   setBins(binList.map((bin) => bin.items));
   setFirstBins(binList.map((bin) => bin.items));
 };
-const bestFitAlgorithm = (setFunctionCalled, setBestBins, items, capacity) => {
-  setFunctionCalled("Best-Fit Algorithm");
+const bestFitAlgorithm = (setBestBins, items, capacity) => {
   const binList = [];
   items.forEach((item) => {
     let bestBinIndex = -1;

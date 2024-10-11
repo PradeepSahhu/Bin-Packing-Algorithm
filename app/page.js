@@ -144,10 +144,10 @@ export default function Home() {
   //Calling all bins.
 
   const callAllBins = () => {
-    firstFitAlgorithm(setFunctionCalled, setFirstBins, items, capacity);
-    worstFitAlgorithm(setFunctionCalled, setWorstBins, items, capacity);
-    bestFitAlgorithm(setFunctionCalled, setBestBins, items, capacity);
-    nextFitAlgorithm(setFunctionCalled, setNextBins, items, capacity);
+    firstFitAlgorithm(setFirstBins, items, capacity);
+    worstFitAlgorithm(setWorstBins, items, capacity);
+    bestFitAlgorithm(setBestBins, items, capacity);
+    nextFitAlgorithm(setNextBins, items, capacity);
   };
 
   return (
